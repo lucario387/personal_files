@@ -92,20 +92,64 @@ endif
 
 inoremap <C-U> <C-G>u<C-U>
 
+" Leader
+let mapleader = " "
+
+" Options
 set ruler
 set expandtab 
 set smarttab 
+set splitright
+set splitbelow
 set wrap linebreak 
 set smartindent 
+set clipboard^=unnamed
 set shiftwidth=2 
-set tabstop=2 
+set tabstop=8
 set softtabstop=2
-inoremap jk <Esc>
+set conceallevel=2
+
+" Mappings
 inoremap <C-H> <Left>
+inoremap <C-C> <Esc>
 inoremap <C-J> <Down>
 inoremap <C-K> <Up>
 inoremap <C-L> <Right>
+inoremap <C-F> <C-Right>
+inoremap <C-B> <C-Left>
 inoremap <C-E> <End>
 inoremap <C-A> <Esc>^i
-nnoremap <C-C> :%y+
+inoremap <A-j> <Esc>:m+1<CR>==gi
+inoremap <A-k> <Esc>:m-2<CR>==gi
+
+vnoremap <Leader>y "+y
+vnoremap <leader>Y "+Y
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
+
+xnoremap < <gv
+xnoremap > >gv
+xnoremap <A-j> :m'>+1<CR>gv=gv
+xnoremap <A-k> :m'<-2<CR>gv=gv
+xnoremap p p:let @+=@0<CR>:let @"=@0<CR>
+
+
+nnoremap x "_x
+nnoremap <C-C> :%y+<CR>
+nnoremap <C-S> :w<CR>
+nnoremap <C-D> <C-D>zz
+nnoremap <C-U> <C-u>zz
+nnoremap n nzz
+nnoremap <C-H> <C-W>h
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
+nnoremap <A-k> :m -2<CR>==
+nnoremap <A-j> :m +1<CR>==
+nnoremap <Leader>y "+y
+nnoremap <leader>Y "+Y
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+nnoremap <leader>q :q<CR>
 set whichwrap+=<,>,[,],h,l
+

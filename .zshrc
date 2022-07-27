@@ -1,9 +1,10 @@
+# zmodload zsh/zprof
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -28,10 +29,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k" # set by `omz`
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
-HYPHEN_INSENSITIVE="true"
+ #HYPHEN_INSENSITIVE="true"
 
 # Uncomment one of the following lines to change the auto-update behavior
-zstyle ':omz:update' mode disabled  # disable automatic updates
+ zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
@@ -45,7 +46,7 @@ zstyle ':omz:update' mode disabled  # disable automatic updates
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-DISABLE_AUTO_TITLE="true"
+# DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -59,7 +60,7 @@ DISABLE_AUTO_TITLE="true"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -67,7 +68,7 @@ DISABLE_AUTO_TITLE="true"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+ HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -77,7 +78,7 @@ DISABLE_AUTO_TITLE="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(colored-man-pages zsh-autosuggestions fast-syntax-highlighting zsh-z gh)
+plugins=(zsh-z colored-man-pages)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -86,7 +87,6 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
@@ -98,6 +98,7 @@ fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
+#export TIMEFMT=
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -107,18 +108,14 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias reborn="cd ~/Desktop/Game/Reborn/ && ./Game.AppImage"
-alias rejuv="cd ~/Desktop/Game/Rejuvenation/ && ./mkxp-z.Appimage 2> /dev/null"
-alias lutris="sudo sysctl -w abi.vsyscall32=0 && lutris"
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+alias reborn="cd ~/Desktop/Game/Reborn/ && ./Game.AppImage $@"
+alias rejuv="cd ~/Desktop/Game/Rejuvenation/ && ./mkxp-z.Appimage 2> /dev/null $@"
+alias yaya="yay"
+alias s="kitty +kitten ssh"
+alias lg="lazygit"
+alias updatenvim="cd ~/neovim && git pull && sudo make install && cd -"
+alias reload_sxhkd="pkill -USR1 -x sxhkd"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# opam configuration
-[[ ! -r /home/lucario387/.opam/opam-init/init.zsh ]] || source /home/lucario387/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
-
-# >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/lucario387/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
@@ -131,16 +128,25 @@ else
     fi
 fi
 unset __conda_setup
+
 # <<< conda initialize <<<
 
 setopt HIST_FIND_NO_DUPS
-setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_DUPS 
+setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_SAVE_NO_DUPS
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,underline"
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 bindkey '^H' backward-kill-word
 
+source /usr/share/fzf/key-bindings.zsh 
+source /usr/share/fzf/completion.zsh
 
-[ -f "/home/lucario387/.ghcup/env" ] && source "/home/lucario387/.ghcup/env" # ghcup-env
-DOTNET_CLI_TELEMETRY_OPTOUT=1
+# [ -f "/home/lucario387/.ghcup/env" ] && source "/home/lucario387/.ghcup/env" # ghcup-env
+
+# opam configuration
+# [[ ! -r /home/lucario387/.opam/opam-init/init.zsh ]] || source /home/lucario387/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# export GPG_TTY ="$(tty)"
+

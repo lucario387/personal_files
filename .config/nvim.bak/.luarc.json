@@ -1,0 +1,42 @@
+{
+    "diagnostics": {
+        "globals": [
+            "vim"
+        ],
+        "neededFileStatus": {
+            "codestyle-check": "Opened",
+            "type-check": "Opened"
+        }
+    },
+    "format": {
+        "defaultConfig": {
+            "align_function_define_params": true,
+            "continuous_assign_statement_align_to_equal_sign": true,
+            "continuous_assign_table_field_align_to_equal_sign": true,
+            "indent_size": 2,
+            "indent_style": "tab",
+            "insert_final_newline": true,
+            "keep_one_space_between_namedef_and_attribute": true,
+            "keep_one_space_between_table_and_braket": true,
+            "quote_style": "double",
+            "tab_width": 2
+        },
+        "enable": true
+    },
+    "hint.enable": false,
+    "hover.enable": true,
+    "runtime": {
+        "version": "LuaJIT"
+    },
+    "telemetry.enable": false,
+    "workspace": {
+        "checkThirdParty": false,
+        "library": {
+            "./lua": true,
+            "/home/lucario387/.local/share/nvim/site/pack/packer": true,
+            "/usr/share/nvim/runtime/lua": true
+        },
+        "maxPreload": 100000,
+        "preloadFileSize": 10000
+    }
+}
