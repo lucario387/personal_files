@@ -4,36 +4,36 @@ local fn = vim.fn
 local api = vim.api
 
 local HOME = os.getenv("HOME")
-local MINIMUM_SIZE = 80
+local MINIMUM_SIZE = 95
 local FILENAME_SIZE = 18
 
 local modes = {
-  ["n"] = { "NORMAL", "StNormalMode" },
+  ["n"]   = { "NORMAL", "StNormalMode" },
   ["niI"] = { "NORMAL i", "StNormalMode" },
   ["niR"] = { "NORMAL r", "StNormalMode" },
   ["niV"] = { "NORMAL v", "StNormalMode" },
-  ["no"] = { "N-PENDING", "StNormalMode" },
-  ["i"] = { "INSERT", "StInsertMode" },
-  ["ic"] = { "INSERT (completion)", "StInsertMode" },
-  ["ix"] = { "INSERT completion", "StInsertMode" },
-  ["t"] = { "TERMINAL", "StTerminalMode" },
-  ["nt"] = { "NTERMINAL", "StNTerminalMode" },
-  ["v"] = { "VISUAL", "StVisualMode" },
-  ["V"] = { "V-LINE", "StVisualMode" },
-  ["Vs"] = { "V-LINE (Ctrl O)", "StVisualMode" },
-  [""] = { "V-BLOCK", "StVisualMode" },
-  ["R"] = { "REPLACE", "StReplaceMode" },
-  ["Rv"] = { "V-REPLACE", "StReplaceMode" },
-  ["s"] = { "SELECT", "StSelectMode" },
-  ["S"] = { "S-LINE", "StSelectMode" },
-  [""] = { "S-BLOCK", "StSelectMode" },
-  ["c"] = { "COMMAND", "StCommandMode" },
-  ["cv"] = { "COMMAND", "StCommandMode" },
-  ["ce"] = { "COMMAND", "StCommandMode" },
-  ["r"] = { "PROMPT", "StConfirmMode" },
-  ["rm"] = { "MORE", "StConfirmMode" },
-  ["r?"] = { "CONFIRM", "StConfirmMode" },
-  ["!"] = { "SHELL", "StTerminalMode" },
+  ["no"]  = { "N-PENDING", "StNormalMode" },
+  ["i"]   = { "INSERT", "StInsertMode" },
+  ["ic"]  = { "INSERT (completion)", "StInsertMode" },
+  ["ix"]  = { "INSERT completion", "StInsertMode" },
+  ["t"]   = { "TERMINAL", "StTerminalMode" },
+  ["nt"]  = { "NTERMINAL", "StNTerminalMode" },
+  ["v"]   = { "VISUAL", "StVisualMode" },
+  ["V"]   = { "V-LINE", "StVisualMode" },
+  ["Vs"]  = { "V-LINE (Ctrl O)", "StVisualMode" },
+  [""]   = { "V-BLOCK", "StVisualMode" },
+  ["R"]   = { "REPLACE", "StReplaceMode" },
+  ["Rv"]  = { "V-REPLACE", "StReplaceMode" },
+  ["s"]   = { "SELECT", "StSelectMode" },
+  ["S"]   = { "S-LINE", "StSelectMode" },
+  [""]   = { "S-BLOCK", "StSelectMode" },
+  ["c"]   = { "COMMAND", "StCommandMode" },
+  ["cv"]  = { "COMMAND", "StCommandMode" },
+  ["ce"]  = { "COMMAND", "StCommandMode" },
+  ["r"]   = { "PROMPT", "StConfirmMode" },
+  ["rm"]  = { "MORE", "StConfirmMode" },
+  ["r?"]  = { "CONFIRM", "StConfirmMode" },
+  ["!"]   = { "SHELL", "StTerminalMode" },
 }
 
 -- local hidden_filetypes = {
@@ -42,8 +42,8 @@ local modes = {
 --   "mind",
 -- }
 
-M.invi_sep = "%#StInviSep# "
-M.padding_ft = function(ft)
+local invi_sep = "%#StInviSep# "
+local padding_ft = function(ft)
   if vim.o.columns < MINIMUM_SIZE then return "" end
   for _, win in pairs(api.nvim_tabpage_list_wins(0)) do
     if vim.bo[api.nvim_win_get_buf(win)].ft == ft then
@@ -56,7 +56,7 @@ M.padding_ft = function(ft)
   return ""
 end
 
-M.mode = function()
+local mode = function()
   local m = api.nvim_get_mode().mode
   local current_mode = "%#" .. modes[m][2] .. "# " .. modes[m][1]
   local left_sep = "%#" .. modes[m][2] .. "Sep#"
@@ -65,7 +65,7 @@ M.mode = function()
 end
 
 
-M.cwd = function()
+local cwd = function()
   local left_sep = "%#StCwdSep#"
   local dir_name = (fn.getcwd() == HOME)
     and "%#StCwd# $HOME"
@@ -73,7 +73,7 @@ M.cwd = function()
   return (vim.o.columns > MINIMUM_SIZE) and left_sep .. dir_name or ""
 end
 
-M.file_name = function()
+local file_name = function()
   local filename = fn.expand("%:t")
   if filename == "" or #filename >= FILENAME_SIZE then
     return (vim.o.columns > MINIMUM_SIZE) and "%#StCwdSep#" or ""
@@ -87,21 +87,21 @@ M.file_name = function()
   return left_sep .. file_info .. right_sep
 end
 
-M.git = function()
+local git = function()
   ---@diagnostic disable-next-line: undefined-field
   if not vim.b.gitsigns_head or vim.b.gitsigns_git_status then
     return ""
   end
   ---@diagnostic disable-next-line: undefined-field
   local git_status = vim.b.gitsigns_status_dict
-  local branch = "%#StGitBranch#  " .. git_status.head
+  local branch = "%#StGitBranch# " .. git_status.head
   local added = (git_status.added and git_status.added ~= 0)
     and ("%#StGitAdded#  " .. git_status.added) or ""
   local changed = (git_status.changed and git_status.changed ~= 0)
     and ("%#StGitChanged#  " .. git_status.changed) or ""
   local removed = (git_status.removed and git_status.removed ~= 0)
     and ("%#StGitRemoved#  " .. git_status.removed) or ""
-  return branch .. added .. changed .. removed
+  return "%#StGitSep#" .. branch .. added .. changed .. removed .. "%#StGitSep#"
 end
 
 -- M.session_status = function()
@@ -110,34 +110,18 @@ end
 --     or "%#StSessionStatus#  "
 -- end
 
-M.lsp_progress = function()
-
-  local msg = vim.lsp.util.get_progress_messages()[1] or nil
-
-  if vim.o.columns < MINIMUM_SIZE or not msg then
-    return ""
-    -- return M.lsp_clients()
-  end
-  local message = string.format(
-    " %%<%s %s (%s%%%%) ",
-    msg.title, msg.message or "", msg.percentage or 0
-  )
-
-  return ("%#St_LspProgress#" .. message) or ""
-end
-
-M.lsp_diagnostics = function()
+local lsp_diagnostics = function()
   if #vim.lsp.get_active_clients({ bufnr = 0 }) == 0 then return "" end
   local num_errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
   local num_warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
   local num_hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
   local num_infos = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
   return string.format(
-    "%%#StLSPErrors# %d %%#StLSPWarnings# %d %%#StLSPHints# %d %%#StLSPInfo# %d ",
+    "%%#StLSPDiagSep#%%#StLSPErrors# %d%%#StLSPWarnings# %d%%#StLSPHints# %d%%#StLSPInfo# %d%%#StLSPDiagSep#",
     num_errors, num_warnings, num_hints, num_infos)
 end
 
-M.lsp_clients = function()
+local lsp_clients = function()
   local clients = {}
   for _, client in pairs(vim.lsp.get_active_clients()) do
     if client.attached_buffers[api.nvim_get_current_buf()] then
@@ -150,7 +134,7 @@ M.lsp_clients = function()
     or "%#StLSPClient#  LSP "
 end
 
-M.position = function()
+local position = function()
 
   if not vim.api.nvim_buf_get_option(0, "modifiable") then
     return ""
@@ -170,39 +154,41 @@ M.position = function()
   return left_sep .. cursor_position .. right_sep
 end
 
-M.current_time = function()
+local current_time = function()
   return "%#StatusLine#" .. vim.fn.strftime("%H:%M:%S") .. " "
 end
 
 M.draw = function()
   if vim.o.columns > MINIMUM_SIZE then
     return table.concat({
-      M.mode(),
-      M.invi_sep,
-      M.cwd(),
-      M.file_name(),
-      M.git(),
+      mode(),
+      invi_sep,
+      cwd(),
+      file_name(),
+      invi_sep,
+      lsp_diagnostics(),
+      lsp_clients(),
       -- "%=",
-      -- M.lsp_progress(),
-      -- M.lsp_clients(),
+      -- lsp_progress(),
+      -- lsp_clients(),
       "%=",
-      M.lsp_diagnostics(),
-      M.lsp_clients(),
-      -- M.current_time(),
-      -- M.session_status(),
-      M.position(),
+      git(),
+      invi_sep,
+      -- current_time(),
+      -- session_status(),
+      position(),
     })
   else
     return table.concat({
-      M.mode(),
-      M.invi_sep,
-      M.git(),
+      mode(),
+      invi_sep,
+      cwd(),
+      file_name(),
+      -- git(),
       "%=",
-      -- M.current_time(),
-      -- M.session_status(),
-      M.cwd(),
-      M.file_name(),
-      M.position(),
+      -- current_time(),
+      -- session_status(),
+      position(),
     })
   end
 end

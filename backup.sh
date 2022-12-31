@@ -32,7 +32,7 @@ vim_config_backup() {
 
 # Backup omz config
 omz_backup() {
-	cp "$HOME/.p10k.zsh" "$HOME/.zshrc" "$HOME/dotfiles"
+	cp "$HOME/.zshrc" "$HOME/dotfiles"
 	return 0
 }
 

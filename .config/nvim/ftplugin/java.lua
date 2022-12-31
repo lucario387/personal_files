@@ -12,6 +12,7 @@ local jdtls_path = home .. "/.local/share/nvim/mason/packages/jdtls"
 local workspace_name = home .. "/.local/share/eclipse/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 local extendedClientCapabilities = jdtls.extendedClientCapabilities
 extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
+extendedClientCapabilities.progressReportProvider = true
 
 local bundles = {
   vim.fn.glob(vim.fn.stdpath("data") ..
@@ -53,6 +54,9 @@ config.capabilities = require("custom.plugins.lsp").set_capabilities()
 
 config.settings = {
   java = {
+    -- format = {
+    --   settings = vim.env.HOME .. "/.config/jdtls/google_java_format.xml"
+    -- },
     configuration = {
       runtimes = {
         {
@@ -78,10 +82,11 @@ config.settings = {
     contentProvider = { preferred = "fernflower" },
     completion = {
       favoriteStaticMembers = {
+        "org.junit.Assert.*",
         "org.junit.jupiter.api.Assertions.*",
         "java.util.Objects.requireNonNull",
         "java.util.Objects.requireNonNullElse",
-        "org.mockito.Mockito.*"
+        "org.mockito.Mockito.*",
       },
       filteredTypes = {
         "com.sun.*",
@@ -104,7 +109,7 @@ config.on_init = function(client, _)
   client.notify("workspace/didChangeConfiguration", { settings = config.settings })
 end
 
-config.on_attach = function(client, bufnr)
+config.on_attach = function(_, bufnr)
   require("core.utils").load_mappings("lspconfig", { buffer = bufnr })
   require("core.utils").load_mappings("jdtls", { buffer = bufnr })
   vim.keymap.set("n", "gi", function() require("jdtls").super_implementation() end, { buffer = bufnr })
@@ -114,28 +119,7 @@ config.on_attach = function(client, bufnr)
     },
     hotcodereplace = "auto"
   })
-  vim.api.nvim_buf_create_user_command(0, "JdtCompile",
-    function(opts)
-      require("jdtls").compile(opts.fargs)
-    end,
-    {
-      bang = true,
-      nargs = "?",
-      complete = "custom,v:lua.require'jdtls'._complete_compile"
-    }
-  )
-  vim.api.nvim_buf_create_user_command(0, "JdtSetRuntime",
-    function(cmdopts)
-      require("jdtls").set_runtime(cmdopts.fargs)
-    end,
-    {
-      bang = true,
-      nargs = "?",
-      complete = "custom,v:lua.require('jdtls')._complete_set_runtime"
-    }
-  )
-  vim.api.nvim_buf_create_user_command(0, "JdtJshell", function() require("jdtls").jshell() end, {})
-  vim.api.nvim_buf_create_user_command(0, "JdtUpdateConfig", function() require("jdtls").update_project_config() end, {})
+  require("jdtls.setup").add_commands()
 end
 -- mute; having progress reports is enough
 -- config.handlers = {

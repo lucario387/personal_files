@@ -3,9 +3,10 @@ local M = {}
 ---register for null-ls
 ---@param sources table<any> list of sources to register
 M.register = function(sources)
+  local null = require("null-ls")
   for _, source in ipairs(sources) do
-    if not require("null-ls").is_registered(source) then
-      require("null-ls").register(source)
+    if not null.is_registered(source) then
+      null.register(source)
     end
   end
 end
@@ -16,33 +17,24 @@ end
 M.on_attach = function(client, bufnr)
   -- Load LSP mappings for buffer bufnr
   require("core.utils").load_mappings("lspconfig", { buffer = bufnr })
-
-  -- Autoformat
-  -- if client.supports_method("textDocument/formatting") then
-  --   vim.api.nvim_create_autocmd("BufWritePre", {
-  --     buffer = bufnr,
-  --     callback = function()
-  --       vim.lsp.buf.format({
-  --         -- formatting_options = {
-  --         --   trimTrailingWhitespace = true,
-  --         -- },
-  --         bufnr = bufnr,
-  --       })
-  --     end
-  --   })
-  -- end
-  -- local augroup = vim.api.nvim_create_augroup("LSPAutoFormat", {clear = false})
-  -- vim.api.nvim_clear_autocmds({group = augroup})
-  -- vim.api.nvim_create_autocmd("BufWritePre", {
-  --   group = augroup,
-  --   callback = function()
-  --     vim.lsp.buf.format({
-  --       bufnr = bufnr,
+  -- if client.supports_method("textDocument/semanticTokens") then
+  --   local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+  --   --disable semantics highlighting for large files cuz its slow as fuck
+  --   if ok and stats and stats.size > 200 * 1024 then
+  --     vim.api.nvim_create_autocmd("LspAttach", {
+  --       buffer = bufnr,
+  --       once = true,
+  --       callback = function()
+  --         vim.diagnostic.disable(bufnr)
+  --         vim.lsp.semantic_tokens.stop(bufnr, client.id)
+  --       end
   --     })
+  --     -- client.server_capabilities.semanticTokensProvider = nil
   --   end
-  -- })
+  -- end
 end
 
+---@return ClientCapabilities
 M.set_capabilities = function()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem = {
@@ -53,7 +45,7 @@ M.set_capabilities = function()
     labelDetailsSupport = true,
     deprecatedSupport = true,
     commitCharactersSupport = true,
-    tagSupport = { valueSet = { 1 } },
+    -- tagSupport = { valueSet = { 1 } },
     resolveSupport = {
       properties = {
         -- "edit",
@@ -75,8 +67,8 @@ M.lsp_handlers = function()
 
   lspSymbol("Warn", " ")
   lspSymbol("Info", " ")
-  lspSymbol("Hint", "")
-  lspSymbol("Error", " ")
+  lspSymbol("Hint", " ")
+  lspSymbol("Error", " ")
 
   vim.diagnostic.config {
     virtual_text     = false,
@@ -92,16 +84,7 @@ M.lsp_handlers = function()
       scope = "line",
     },
   }
-  -- vim.notify = function(msg, log_level)
-  --   if msg:match "exit code" then
-  --     return
-  --   end
-  --   if log_level == vim.log.levels.ERROR then
-  --     vim.api.nvim_err_writeln(msg)
-  --   else
-  --     vim.api.nvim_echo({ { msg } }, true, {})
-  --   end
-  -- end
+  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 end
 
 return M

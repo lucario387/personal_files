@@ -96,6 +96,7 @@ inoremap <C-U> <C-G>u<C-U>
 let mapleader = " "
 
 " Options
+" set paste
 set ruler
 set expandtab 
 set smarttab 
@@ -103,7 +104,7 @@ set splitright
 set splitbelow
 set wrap linebreak 
 set smartindent 
-set clipboard^=unnamed
+set clipboard^=unnamedplus
 set shiftwidth=2 
 set tabstop=8
 set softtabstop=2
@@ -132,6 +133,8 @@ xnoremap > >gv
 xnoremap <A-j> :m'>+1<CR>gv=gv
 xnoremap <A-k> :m'<-2<CR>gv=gv
 xnoremap p p:let @+=@0<CR>:let @"=@0<CR>
+xnoremap <expr> j v:count <Bar><Bar> mode(1)[0:1] == "no" ? "j" : "gj"
+xnoremap <expr> k v:count <Bar><Bar> mode(1)[0:1] == "no" ? "k" : "gk"
 
 
 nnoremap x "_x
@@ -140,6 +143,8 @@ nnoremap <C-S> :w<CR>
 nnoremap <C-D> <C-D>zz
 nnoremap <C-U> <C-u>zz
 nnoremap n nzz
+nnoremap <expr> j v:count <Bar><Bar> mode(1)[0:1] == "no" ? "j" : "gj"
+nnoremap <expr> k v:count <Bar><Bar> mode(1)[0:1] == "no" ? "k" : "gk"
 nnoremap <C-H> <C-W>h
 nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k

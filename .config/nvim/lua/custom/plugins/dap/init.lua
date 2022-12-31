@@ -12,6 +12,7 @@ end
 M.setup = function()
   local dap = require("dap")
   local repl = require("dap.repl")
+  require("core.utils").load_mappings("dap")
   -- nvim-dap settings
   vim.fn.sign_define("DapBreakpoint", { text = "🔴", texthl = "", linehl = "", numhl = "", })
   vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "Error", linehl = "", numhl = "", })
@@ -37,8 +38,8 @@ M.setup = function()
     pattern = "",
     command = "startinsert"
   })
-  vim.api.nvim_create_autocmd("BufLeave", {
-    pattern = "term://",
+  vim.api.nvim_create_autocmd("TermLeave", {
+    pattern = "",
     command = "stopinsert",
   })
   M.load_vscode_config()

@@ -17,18 +17,22 @@ declare -a fonts_list=(
 "FiraCode.zip"
 "FiraMono.zip"
 "JetBrainsMono.zip"
+"NerdFontsSymbolsOnly.zip"
 )
 
 fonts_installer() {
-	fonts_name="JetBrainsMono.zip"
-	fonts_path="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2"
+	# fonts_name="$1"
+	fonts_path="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.0-RC"
 	echo "[-] Download fonts [-]"
-	echo "$fonts_name from $fonts_path"
-	wget "$fonts_path/$fonts_name"
-	unzip "$fonts_name" -d ~/.fonts
-	fc-cache -fv
-	rm -rf "$fonts_name"
+  for var in ${1:+"$@"}; do
+    echo "$var from $fonts_path"
+	  wget "$fonts_path/$var"
+    unzip "$var" -d ~/.local/share/fonts
+    rm -rf "$var"
+  done
+	# wget "$fonts_path/$fonts_name"
+  fc-cache -fv
 	echo "done!"
 }
 
-fonts_installer
+fonts_installer "JetBrainsMono.zip" "NerdFontsSymbolsOnly.zip"

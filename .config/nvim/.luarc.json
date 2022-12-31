@@ -4,11 +4,25 @@
     "checkThirdParty": false,
     "maxPreload": 2500,
     "preloadFileSize": 20000,
+    "ignoreSubmodules": true,
     "library": [
-      "/usr/local/share/nvim/runtime"
+      "/home/lucario387/.config/nvim",
+      "/usr/local/share/nvim/runtime",
+      "/home/lucario387/.local/share/nvim/site/pack/packer/start"
+    ]
+  },
+  "runtime": {
+    "version": "LuaJIT",
+    "path": [
+      "?.lua",
+      "?/init.lua",
+      "lua/?.lua",
+      "lua/?/init.lua"
     ]
   },
   "diagnostics": {
+    "workspaceRate": 100,
+    "libraryFiles": "Disable",
     "globals": [
       "vim"
     ],
@@ -21,33 +35,27 @@
     }
   },
   "format": {
-    "enable": true,
     "defaultConfig": {
       "$schema": "https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/docs/format_config_EN.md",
-      "indent_size": "2",
-      "continuation_indent_size": "2",
-      "indent_style": "space",
-      "insert_final_newline": "true",
-      "quote_style": "double",
-      "align_function_define_params": "true",
       "align_call_args": "false",
+      "align_function_define_params": "true",
+      "continuation_indent_size": "2",
       "continuous_assign_statement_align_to_equal_sign": "true",
       "continuous_assign_table_field_align_to_equal_sign": "true",
+      "if_condition_align_with_each_other": "true",
+      "if_condition_no_continuation_indent": "true",
+      "indent_size": "2",
+      "indent_style": "space",
+      "insert_final_newline": "true",
       "keep_one_space_between_namedef_and_attribute": "true",
       "keep_one_space_between_table_and_braket": "true",
-      "if_condition_no_continuation_indent": "false",
-      "label_no_indent": "true"
-    }
+      "label_no_indent": "true",
+      "quote_style": "double"
+    },
+    "enable": true
   },
-  "runtime": {
-    "version": "LuaJIT",
-    "path": [
-      "?.lua",
-      "?/init.lua",
-      "lua/?.lua",
-      "lua/?/init.lua",
-      "plugin/?.lua"
-    ]
+  "completion": {
+    "callSnippet": "Both"
   },
   "hint": {
     "enable": true,
@@ -55,12 +63,14 @@
   },
   "hover": {
     "enable": true,
-    "expandAlias": true
-  },
-  "completion": {
-    "callSnippet": "Both"
+    "expandAlias": true,
+    "enumsLimit": 5,
+    "previewFields": 100
   },
   "telemetry": {
     "enable": false
+  },
+  "semantic": {
+    "enable": true
   }
 }

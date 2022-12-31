@@ -5,6 +5,22 @@ local utils = require("custom.ui.tabline.utils")
 local disabled_buftypes = {
   "terminal",
   "prompt",
+  -- "nofile",
+}
+
+local disabled_filetypes = {
+  "NvimTree",
+  "mason",
+  "packer",
+  "qf",
+  "trouble",
+  "alpha",
+  "help",
+  "terminal",
+  "lspinfo",
+  "TelescopePrompt",
+  "TelescopeResults",
+  "dap-repl",
 }
 
 autocmd("TermOpen", {
@@ -22,14 +38,25 @@ autocmd({ "BufAdd", "BufEnter" }, {
       vim.t[tabnr].bufs = { args.buf }
       return
     end
+    if vim.tbl_contains(
+      disabled_buftypes,
+      vim.api.nvim_buf_get_option(args.buf, "buftype"))
+    or vim.tbl_contains(
+      disabled_filetypes,
+      vim.api.nvim_buf_get_option(args.buf, "filetype"))
+    then
+      -- if not #vim.t[tabnr].bufs == 1 then
+      utils.delete_buffer(args.buf)
+      -- end
+      return
+    end
 
     local buflist = vim.t[tabnr].bufs
 
-
     -- check for duplicates
-    if not vim.tbl_contains(buflist, args.buf)
-      and utils.buf_is_valid(args.buf) then
-        -- and (args.event == "BufAdd" or utils.buf_is_valid(args.buf)) then
+    if  not vim.tbl_contains(buflist, args.buf)
+    and utils.buf_is_valid(args.buf) then
+      -- and (args.event == "BufAdd" or utils.buf_is_valid(args.buf)) then
       table.insert(buflist, args.buf)
       vim.t[tabnr].bufs = buflist
     end
@@ -70,7 +97,6 @@ autocmd("TabEnter", {
     if packer_plugins["nvim-tree.lua"] and packer_plugins["nvim-tree.lua"].loaded then
       vim.api.nvim_command("silent! NvimTreeClose")
     end
-    -- utils.set_tab_bufs_listed(vim.api.nvim_get_current_tabpage())
   end
 })
 --
@@ -79,12 +105,6 @@ autocmd("TabLeave", {
   callback = function()
     if packer_plugins["nvim-tree.lua"] and packer_plugins["nvim-tree.lua"].loaded then
       vim.api.nvim_command("silent! NvimTreeClose")
-      -- vim.api.nvim_cmd({
-      --   cmd = "NvimTreeClose",
-      --   mods = {
-      --     silent = true,
-      --   }
-      -- })
     end
   end
 })
