@@ -1,7 +1,7 @@
 ;; extends
 (pair
-  key: (string (string_content) @field)
+  key: (string) @field
   value: [(object) (array)]
 ) 
-(pair value: [ (number) (null) ] @constant)
+; (pair value: [ (number) (null) ] @constant)
 

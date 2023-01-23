@@ -14,13 +14,14 @@ HIST_STAMPS="mm/dd/yyyy"
 # HISTORY_IGNORE="(l[slah]|cd *|[bf]g|[n]#vi[m]#|f[cd]|tldr|z)"
 HISTSIZE=100000
 SAVEHIST=10000
-HISTFILE=${HOME}/.zsh_history
-setopt EXTENDED_GLOB
-setopt HIST_FIND_NO_DUPS
-setopt HIST_IGNORE_DUPS 
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_SAVE_NO_DUPS
+# HISTFILE=${HOME}/.zsh_history
+# setopt EXTENDED_GLOB
 setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
 plugins=(zsh-z colored-man-pages) 
 
 source $ZSH/oh-my-zsh.sh

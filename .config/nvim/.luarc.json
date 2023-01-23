@@ -6,8 +6,7 @@
     "preloadFileSize": 20000,
     "ignoreSubmodules": true,
     "library": [
-      "/home/lucario387/.config/nvim",
-      "/usr/local/share/nvim/runtime",
+      "/usr/local/share/nvim/runtime/lua",
       "/home/lucario387/.local/share/nvim/site/pack/packer/start"
     ]
   },
@@ -63,9 +62,9 @@
   },
   "hover": {
     "enable": true,
-    "expandAlias": true,
+    "expandAlias": false,
     "enumsLimit": 5,
-    "previewFields": 100
+    "previewFields": 20
   },
   "telemetry": {
     "enable": false

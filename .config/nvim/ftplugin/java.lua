@@ -15,11 +15,15 @@ extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
 extendedClientCapabilities.progressReportProvider = true
 
 local bundles = {
-  vim.fn.glob(vim.fn.stdpath("data") ..
-    "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar")
+  vim.fn.glob(
+    vim.fn.stdpath("data")
+      .. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
+  ),
 }
-vim.list_extend(bundles,
-  vim.split(vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/java-test/extension/server/*.jar"), "\n"))
+vim.list_extend(
+  bundles,
+  vim.split(vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/java-test/extension/server/*.jar"), "\n")
+)
 
 local config = {}
 
@@ -34,11 +38,16 @@ config.cmd = {
   "-Dlog.level=ALL",
   "-Xmx4G",
   "--add-modules=ALL-SYSTEM",
-  "--add-opens", "java.base/java.util=ALL-UNNAMED",
-  "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-  "-jar", vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar"),
-  "-configuration", jdtls_path .. "/config_linux",
-  "-data", workspace_name,
+  "--add-opens",
+  "java.base/java.util=ALL-UNNAMED",
+  "--add-opens",
+  "java.base/java.lang=ALL-UNNAMED",
+  "-jar",
+  vim.fn.glob(jdtls_path .. "/plugins/org.eclipse.equinox.launcher_*.jar"),
+  "-configuration",
+  jdtls_path .. "/config_linux",
+  "-data",
+  workspace_name,
 }
 
 config.flags = {
@@ -70,12 +79,12 @@ config.settings = {
         {
           name = "JavaSE-19",
           path = "/usr/lib/jvm/java-19-openjdk/",
-        }
+        },
       },
     },
     project = {
       referencedLibraries = {
-        "/home/lucario387/Desktop/INIAD/Java/jar/gson-2.8.6.jar"
+        "/home/lucario387/Desktop/INIAD/Java/jar/gson-2.8.6.jar",
       },
     },
     signatureHelp = { enabled = true },
@@ -98,11 +107,11 @@ config.settings = {
     },
     codeGeneration = {
       toString = {
-        template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}"
+        template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
       },
-      useBlocks = true
+      useBlocks = true,
     },
-  }
+  },
 }
 
 config.on_init = function(client, _)
@@ -110,14 +119,16 @@ config.on_init = function(client, _)
 end
 
 config.on_attach = function(_, bufnr)
-  require("core.utils").load_mappings("lspconfig", { buffer = bufnr })
-  require("core.utils").load_mappings("jdtls", { buffer = bufnr })
-  vim.keymap.set("n", "gi", function() require("jdtls").super_implementation() end, { buffer = bufnr })
+  require("mappings").lsp()
+  require("mappings").jdtls()
+  vim.keymap.set("n", "gi", function()
+    require("jdtls").super_implementation()
+  end, { buffer = bufnr })
   require("jdtls.dap").setup_dap({
     config_overrides = {
       noDebug = false,
     },
-    hotcodereplace = "auto"
+    hotcodereplace = "auto",
   })
   require("jdtls.setup").add_commands()
 end
