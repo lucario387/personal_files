@@ -3,13 +3,13 @@ local M = {}
 local set = vim.keymap.set
 
 --- Use for null-ls and lsp
-M.null_ls = function()
+M.null_ls = function(bufnr)
   set("n", "<leader>ca", function()
     vim.lsp.buf.code_action()
-  end, { desc = "code action", buffer = 0 })
+  end, { desc = "code action", buffer = bufnr })
   set("x", "<leader>ca", function()
     require("lspsaga.codeaction"):code_action()
-  end, { desc = "range code action", buffer = 0 })
+  end, { desc = "range code action", buffer = bufnr })
 end
 
 M.general = function()
@@ -48,35 +48,25 @@ M.general = function()
   set("n", "<C-.>", "<C-w>2>", { desc = "" })
   set("n", "<C-,>", "<C-w>2<", { desc = "" })
 
-  -- ["<leader>tt"] = {
-  --   function()
-  --     require("base46").toggle_theme()
-  --   end,
-  --   "toggle theme",
-  -- },
-  -- ["<leader>tr"] = {
-  --   function()
-  --     require("base46").toggle_transparency()
-  --   end,
-  --   opts = { silent = true },
-  -- },
+  set("n", "<leader>tt", function() require("base46").toggle_theme() end, { desc = "Toglge theme" })
+  set("n", "<leader>tr", function() require("base46").toggle_transparency() end, { desc = "Toglge theme" })
 
   set("n", "a", function()
     local line = #vim.trim(vim.fn.getline("."))
     vim.api.nvim_feedkeys(line >= 1 and "a" or "S", "n", false)
-  end, { desc = "auto indent when enter insert on empty line", buffer = 0 })
+  end, { desc = "auto indent when enter insert on empty line", })
   set("n", "i", function()
     local line = #vim.trim(vim.fn.getline("."))
     vim.api.nvim_feedkeys(line >= 1 and "i" or "S", "n", false)
-  end, { desc = "auto indent when enter insert on empty line", buffer = 0 })
+  end, { desc = "auto indent when enter insert on empty line", })
   set("n", "A", function()
     local line = #vim.trim(vim.fn.getline("."))
     vim.api.nvim_feedkeys(line >= 1 and "A" or "S", "n", false)
-  end, { desc = "auto indent when enter insert on empty line", buffer = 0 })
+  end, { desc = "auto indent when enter insert on empty line", })
   set("n", "I", function()
     local line = #vim.trim(vim.fn.getline("."))
     vim.api.nvim_feedkeys(line >= 1 and "I" or "S", "n", false)
-  end, { desc = "auto indent when enter insert on empty line", buffer = 0 })
+  end, { desc = "auto indent when enter insert on empty line", })
 
   set({ "n", "v" }, "<leader>y", '"+y', { noremap = false })
   set({ "n", "v" }, "<leader>Y", '"+Y', { noremap = false })
@@ -110,63 +100,67 @@ M.general = function()
   set("x", "<A-k>", ":m'<-2<CR>gv=gv", { silent = true })
 end
 
-M.lsp = function()
+---@param bufnr integer buffer number to set keymap
+M.lsp = function(bufnr)
+  bufnr = bufnr or 0
   set("n", "K", function()
     vim.lsp.buf.hover()
-  end, { buffer = 0 })
+  end, { buffer = bufnr })
   set("n", "gd", function()
     require("lspsaga.definition"):goto_definition()
     -- vim.lsp.buf.definition()
-  end, { desc = "Goto defintion", buffer = 0 })
+  end, { desc = "Goto defintion", buffer = bufnr })
   set("n", "<leader>rn", function()
     require("lspsaga.rename"):lsp_rename()
-  end, { buffer = 0, desc = "LSP rename" })
+  end, { buffer = bufnr, desc = "LSP rename" })
   set("n", "<leader>fm", function()
     vim.lsp.buf.format({
       async = true,
     })
-  end, { desc = "LSP format", buffer = 0 })
+  end, { desc = "LSP format", buffer = bufnr })
   set("n", "<leader>gr", function()
     require("lspsaga.finder"):lsp_finder()
-  end, { buffer = 0 })
+  end, { buffer = bufnr })
   set("n", "gs", function()
     vim.lsp.buf.signature_help()
-  end, { desc = "Show signature", buffer = 0 })
+  end, { desc = "Show signature", buffer = bufnr })
   set("n", "<leader>ds", function()
     require("lspsaga.diagnostic"):show_diagnostics(arg, "line")
-  end, { desc = "Show line diagnostic", buffer = 0 })
+  end, { desc = "Show line diagnostic", buffer = bufnr })
   set("n", "[d", function()
     require("lspsaga.diagnostic"):goto_prev({ wrap = true })
-  end, { desc = "goto prev diagnostic", buffer = 0 })
+  end, { desc = "goto prev diagnostic", buffer = bufnr })
   set("n", "]d", function() -- vim.diagnostic.goto_next()
     require("lspsaga.diagnostic"):goto_next()
-  end, { desc = "goto next diagnostic", buffer = 0 })
+  end, { desc = "goto next diagnostic", buffer = bufnr })
 
-  M.null_ls()
+  M.null_ls(bufnr)
 end
 
-M.jdtls = function()
-
+---@param bufnr integer buffer number to set keymap
+M.jdtls = function(bufnr)
+  bufnr = bufnr or 0
   set("n", "<A-o>", function()
     require("jdtls").organize_imports()
-  end, { desc = "Jdtls organize imports", buffer = 0 })
+  end, { desc = "Jdtls organize imports", buffer = bufnr })
   set("n", "<leader>jv", function()
     require("jdtls").extract_variable()
-  end, { desc = "extract variable", buffer = 0 })
+  end, { desc = "extract variable", buffer = bufnr })
   set("n", "<F18>", function() -- F18 or S-F6
     require("jdtls").test_class({})
     vim.schedule(function()
       vim.cmd("stopinsert")
     end)
-  end, { desc = "Test java class", buffer = 0 })
+  end, { desc = "Test java class", buffer = bufnr })
   set("n", "<F20>", function() -- F20 or S-F8
     require("jdtls").test_nearest_method()
-  end, { desc = "test nearest java method", buffer = 0 })
+  end, { desc = "test nearest java method", buffer = bufnr })
   set("x", "<leader>jv", function() require("jdtls").extract_variable(true) end,
-    { desc = "Extract variable", buffer = 0 })
+    { desc = "Extract variable", buffer = bufnr })
   set("x", "<leader>jc", function() require("jdtls").extract_constant(true) end,
-    { desc = "Extract constant", buffer = 0 })
-  set("x", "<leader>jm", function() require("jdtls").extract_method(true) end, { desc = "Extract method", buffer = 0 })
+    { desc = "Extract constant", buffer = bufnr })
+  set("x", "<leader>jm", function() require("jdtls").extract_method(true) end,
+    { desc = "Extract method", buffer = bufnr })
 end
 
 M.telescope = function()
@@ -178,10 +172,12 @@ M.telescope = function()
   set("n", "<leader>fk", "<cmd>Telescope keymaps prompt_title=false<CR>", { desc = "find mappings", })
 end
 
-M.git = function()
-  set("n", "<leader>gdo", "<cmd>DiffviewOpen<CR>", { desc = "Open Diff view", buffer = 0 })
-  set("n", "<leader>gdc", "<cmd>DiffviewClose<CR>", { desc = "Close Diff view", buffer = 0 })
-  set("n", "<leader>gdr", "<cmd>DiffviewRefresh<CR>", { desc = "Refresh Diff view", buffer = 0 })
+---@param bufnr integer buffer to set key map
+M.git = function(bufnr)
+  bufnr = bufnr or 0
+  set("n", "<leader>gdo", "<cmd>DiffviewOpen<CR>", { desc = "Open Diff view", buffer = bufnr })
+  set("n", "<leader>gdc", "<cmd>DiffviewClose<CR>", { desc = "Close Diff view", buffer = bufnr })
+  set("n", "<leader>gdr", "<cmd>DiffviewRefresh<CR>", { desc = "Refresh Diff view", buffer = bufnr })
 
   set("n", "[c", function()
     if vim.wo.diff then
@@ -191,7 +187,7 @@ M.git = function()
       require("gitsigns").prev_hunk({ preview = true })
     end)
     return "<Ignore>"
-  end, { expr = true, desc = "Jump to prev hunk", buffer = 0 })
+  end, { expr = true, desc = "Jump to prev hunk", buffer = bufnr })
   set("n", "]c", function()
     if vim.wo.diff then
       return "]c"
@@ -200,15 +196,15 @@ M.git = function()
       require("gitsigns").next_hunk({ preview = true })
     end)
     return "<Ignore>"
-  end, { expr = true, desc = "Jump to next hunk", buffer = 0 })
+  end, { expr = true, desc = "Jump to next hunk", buffer = bufnr })
 
-  set("n", "<leader>rh", function() require("gitsigns").reset_hunk() end, { desc = "Reset hunk", buffer = 0 })
+  set("n", "<leader>rh", function() require("gitsigns").reset_hunk() end, { desc = "Reset hunk", buffer = bufnr })
 
-  set("n", "<leader>ph", function() require("gitsigns").preview_hunk() end, { desc = "Preview hunk", buffer = 0 })
+  set("n", "<leader>ph", function() require("gitsigns").preview_hunk() end, { desc = "Preview hunk", buffer = bufnr })
 
-  set("n", "<leader>gb", function() require("gitsigns").blame_line() end, { desc = "Blame line", buffer = 0 })
+  set("n", "<leader>gb", function() require("gitsigns").blame_line() end, { desc = "Blame line", buffer = bufnr })
 
-  set("n", "<leader>td", function() require("gitsigns").toggle_deleted() end, { desc = "Toggle deleted", buffer = 0 })
+  set("n", "<leader>td", function() require("gitsigns").toggle_deleted() end, { desc = "Toggle deleted", buffer = bufnr })
 end
 
 M.dap = function()

@@ -12,11 +12,11 @@ M.register = function(sources)
 end
 
 ---use for both null ls and lspconfig
----@param client table
+---@param client Client
 ---@param bufnr integer
 M.on_attach = function(client, bufnr)
   -- Load LSP mappings for buffer bufnr
-  require("mappings").lsp()
+  require("mappings").lsp(bufnr)
 end
 
 ---@return ClientCapabilities

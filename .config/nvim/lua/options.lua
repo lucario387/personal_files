@@ -69,10 +69,10 @@ vim.o.foldenable = false
 
 -- Change default grep
 -- if rg exists
-if vim.fn.executable("rg") == 1 then
-  vim.o.grepprg = "rg --vimgrep --smart-case"
-  vim.opt.grepformat:append("%f:%l:%c:%m")
-end
+-- if vim.fn.executable("rg") == 1 then
+--   vim.o.grepprg = "rg --vimgrep --smart-case"
+--   vim.opt.grepformat:append("%f:%l:%c:%m")
+-- end
 
 -- disable nvim intro
 vim.opt.shortmess:append("sIcC")
@@ -169,13 +169,3 @@ vim.filetype.add({
     ["${XDG_CONFIG_HOME:$HOME/.config}/fd/ignore"] = "gitignore",
   },
 })
--- require("custom.autocmd")
-require("config.ui")
--- dev branch
-pcall(function()
-  loadfile(vim.g.base46_cache .. "bg")()
-  loadfile(vim.g.base46_cache .. "defaults")()
-  loadfile(vim.g.base46_cache .. "lsp")()
-  loadfile(vim.g.base46_cache .. "syntax")()
-  loadfile(vim.g.base46_cache .. "treesitter")()
-end)

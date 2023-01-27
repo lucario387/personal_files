@@ -1,7 +1,7 @@
 local M = {}
 
-local configs = require("custom.plugins.dap.config")
-local adapters = require("custom.plugins.dap.adapters")
+local configs = require("config.dap.config")
+local adapters = require("config.dap.adapters")
 
 M.load_vscode_config = function()
   require("dap.ext.vscode").load_launchjs(nil, {

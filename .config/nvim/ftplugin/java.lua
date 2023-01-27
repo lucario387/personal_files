@@ -59,7 +59,7 @@ config.init_options = {
   extendedClientCapabilities = extendedClientCapabilities,
 }
 
-config.capabilities = require("custom.plugins.lsp").set_capabilities()
+config.capabilities = require("config.lsp").set_capabilities()
 
 config.settings = {
   java = {
@@ -119,8 +119,8 @@ config.on_init = function(client, _)
 end
 
 config.on_attach = function(_, bufnr)
-  require("mappings").lsp()
-  require("mappings").jdtls()
+  require("mappings").lsp(bufnr)
+  require("mappings").jdtls(bufnr)
   vim.keymap.set("n", "gi", function()
     require("jdtls").super_implementation()
   end, { buffer = bufnr })

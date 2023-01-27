@@ -18,6 +18,7 @@ if vim.g.lsp.servers.default then
     })
   end
 end
+
 if vim.g.lsp.servers.custom then
   for _, name in ipairs(vim.g.lsp.servers.custom) do
     require("config.lsp.config.custom")[name](on_attach, capabilities)

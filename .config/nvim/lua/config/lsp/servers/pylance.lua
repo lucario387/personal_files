@@ -2,8 +2,8 @@ local lspconfig = require("lspconfig")
 local lsputil = require("lspconfig.util")
 local config = require("lspconfig.configs")
 
-local on_attach = require("custom.plugins.lsp").on_attach
-local capabilities = require("custom.plugins.lsp").set_capabilities()
+local on_attach = require("config.lsp").on_attach
+local capabilities = require("config.lsp").set_capabilities()
 
 local bin_name = "pylance-langserver"
 local cmd = { bin_name, "--stdio" }
@@ -177,7 +177,7 @@ if not config.pylance then
           range = true,
           desc = "Extract method",
         })
-        require("custom.plugins.lsp").register({
+        require("config.lsp").register({
           require("null-ls").builtins.formatting.autopep8,
         })
         on_attach(client, bufnr)

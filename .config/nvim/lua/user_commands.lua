@@ -23,3 +23,21 @@ vim.api.nvim_create_autocmd({ "BufLeave" }, {
   end,
   pattern = "term://*",
 })
+
+vim.api.nvim_create_user_command("PackerSync", function(opts)
+  require("plugins")
+  require("packer").sync(opts.fargs)
+end, {
+  bang = true,
+  nargs = "*",
+  complete = function(lead, a, b)
+    return require("packer").plugin_complete(lead, a, b)
+  end
+})
+
+vim.api.nvim_create_user_command("PackerStatus", function(_)
+  require("plugins")
+  require("packer").status()
+end, {
+  bang = true,
+})

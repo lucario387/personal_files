@@ -169,7 +169,7 @@ M.draw = function()
       invi_sep,
       lsp_diagnostics(),
       lsp_clients(),
-      -- "%=",
+      "%=",
       -- lsp_progress(),
       -- lsp_clients(),
       "%=",

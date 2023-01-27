@@ -23,7 +23,7 @@ require("nvim-treesitter.configs").setup({
     enable = true,
     disable = {
       -- "c", "cpp",
-      -- "python",
+      "python",
     },
   },
   incremental_selection = {
@@ -31,7 +31,7 @@ require("nvim-treesitter.configs").setup({
     keymaps = {
       init_selection = "<cr>",
       node_incremental = "<cr>",
-      scope_incremental = "<s-cr>",
+      scope_incremental = "<Nop>",
       node_decremental = "<bs>",
     }
   },

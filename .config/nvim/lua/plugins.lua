@@ -3,15 +3,15 @@ local plugins = {
 
   -------------------------------------General---------------------------------
   { "wbthomason/packer.nvim",
-    cmd = {
-      "PackerSync",
-      "PackerCompile",
-      "PackerLoad",
-      "PackerStatus",
-    },
-    config = function()
-      require("plugins")
-    end,
+    -- cmd = {
+    --   "PackerSync",
+    --   "PackerCompile",
+    --   "PackerLoad",
+    --   "PackerStatus",
+    -- },
+    -- config = function()
+    --   require("plugins")
+    -- end,
   },
   { "nvim-lua/plenary.nvim", },
 
@@ -71,7 +71,7 @@ local plugins = {
       require("null-ls").setup({
         debug = false,
         on_attach = function(client, bufnr)
-          require("mappings").null_ls()
+          require("mappings").null_ls(bufnr)
         end,
         border = "rounded",
       })
@@ -82,8 +82,9 @@ local plugins = {
     opt = true,
   },
   { "jose-elias-alvarez/typescript.nvim", },
+  { "folke/neodev.nvim", opt = true },
 
-  -------------------------------------Dap-------------------------------------
+  -------------------------------------DAP-------------------------------------
   { "mfussenegger/nvim-dap",
     module = "dap",
     ft = { "c", "cpp" },
@@ -290,7 +291,7 @@ local plugins = {
           border = "rounded",
         },
         on_attach = function(bufnr)
-          require("mappings").git()
+          require("mappings").git(bufnr)
         end,
       })
       null.register({

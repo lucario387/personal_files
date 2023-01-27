@@ -1,9 +1,10 @@
+pcall(require, "impatient")
 vim.g.base46_cache = vim.fn.stdpath("cache") .. "/nvchad/base46/"
+
 require("options")
+require("user_commands")
+require("bootstrap")
 
-require("commands")
-
--- require("bootstrap")
 pcall(function()
   loadfile(vim.g.base46_cache .. "bg")()
   loadfile(vim.g.base46_cache .. "defaults")()
@@ -14,4 +15,3 @@ end)
 
 require("config.ui")
 require("mappings").general()
-

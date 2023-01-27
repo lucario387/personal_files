@@ -1,4 +1,4 @@
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/opt/packer.nvim"
+local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 
 if not vim.loop.fs_stat(install_path) then
   vim.fn.system({

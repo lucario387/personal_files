@@ -1,1 +1,5 @@
 **/*_compiled.*
+**/.nvim.lua
+**/.exrc
+**/.nvimrc
+**/log.txt

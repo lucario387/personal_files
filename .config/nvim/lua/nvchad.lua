@@ -9,7 +9,7 @@ M.reload_theme = function(theme)
   theme = theme or vim.g.nvchad_theme
   vim.g.nvchad_theme = theme
   require("base46").load_all_highlights()
-  vim.api.nvim_exec_autocmd("User", { pattern = "NvChadThemeReload" })
+  vim.api.nvim_exec_autocmds("User", { pattern = "NvChadThemeReload" })
 end
 
 

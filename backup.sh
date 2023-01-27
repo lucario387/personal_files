@@ -11,7 +11,7 @@ PWD=$(dirname $(readlink -f "$0"))
 kitty_backup() {
 	if [ -d ~/.config/kitty ]; then
 		# cp -ru "$HOME/.config/kitty" "$PWD/.config"
-		rsync --delete --inplace --exclude-from="./.gitignore" --no-whole-file --recursive -ptU "$HOME/.config/kitty/" "$PWD/.config/kitty"
+		rsync --delete --inplace --exclude-from="$HOME/.config/kitty/.gitignore" --no-whole-file --recursive -ptU "$HOME/.config/kitty/" "$PWD/.config/kitty"
 	fi
 	return 0
 }

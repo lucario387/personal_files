@@ -30,6 +30,7 @@ local run_command = function(command)
   handle:close()
 end
 
+---@param args 
 local kitty_command = function(args)
   local command = string.format("kitty @ " .. args)
   run_command(command)

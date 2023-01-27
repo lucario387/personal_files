@@ -1,9 +1,8 @@
+---@type CustomLSPConfig
 local M = {}
 
-local lspconfig = require("lspconfig")
-
 M.jsonls = function(on_attach, capabilities)
-  lspconfig.jsonls.setup({
+  require("lspconfig").jsonls.setup({
     on_attach = function(client, bufnr)
       client.server_capabilities.formattingProvider = false
       client.server_capabilities.rangeFormattingProvider = false
@@ -13,9 +12,113 @@ M.jsonls = function(on_attach, capabilities)
   })
 end
 
+M.neodev = function(on_attach, capabilities)
+  vim.cmd.packadd("neodev.nvim")
+  require("neodev").setup({
+    library = {
+      plugins = false,
+    }
+  })
+  require("lspconfig").sumneko_lua.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+      Lua = {
+        telemetry = {
+          enable = false,
+        },
+        completion = {
+          callSnippet = "Both",
+        },
+        format = {
+          defaultConfig = {
+            align_call_args = false,
+            align_function_define_params = true,
+            continuation_indent_size = 2,
+            continuous_assign_statement_align_to_equal_sign = true,
+            continuous_assign_table_field_align_to_equal_sign = true,
+            if_condition_align_with_each_other = true,
+            if_condition_no_continuation_indent = true,
+            indent_size = 2,
+            indent_style = "space",
+            insert_final_newline = true,
+            keep_one_space_between_namedef_and_attribute = true,
+            keep_one_space_between_table_and_braket = true,
+            label_no_indent = true,
+            quote_style = "double",
+          }
+        }
+      }
+    }
+  })
+end
+
+M.sumneko_lua = function(on_attach, capabilities)
+  require("lspconfig").sumneko_lua.setup({
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+      Lua = {
+        telemetry = {
+          enable = false,
+        },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            "/usr/local/share/nvim/runtime",
+            "/home/lucario387/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
+            "/home/lucario387/.local/share/nvim/site/pack/packer/opt/lspsaga.nvim",
+            "/home/lucario387/.local/share/nvim/site/pack/packer/opt/nvim-cmp",
+            "/home/lucario387/.config/nvim/meta"
+          },
+          ignoreSubmodules = true,
+        },
+        runtime = {
+          version = "LuaJIT",
+          path = {
+            "lua/?.lua",
+            "lua/?/init.lua",
+          },
+          pathStrict = true,
+        },
+        diagnostics = {
+          libraryFiles = "Disable",
+          globals = {
+            "vim",
+          }
+        },
+        hover = {
+          expandAlias = false,
+        },
+        completion = {
+          callSnippet = "Both",
+        },
+        format = {
+          defaultConfig = {
+            align_call_args = false,
+            align_function_define_params = true,
+      			continuation_indent_size = 2,
+      			continuous_assign_statement_align_to_equal_sign = true,
+      			continuous_assign_table_field_align_to_equal_sign = true,
+      			if_condition_align_with_each_other = true,
+      			if_condition_no_continuation_indent = true,
+      			indent_size = 2,
+      			indent_style = "space",
+      			insert_final_newline = true,
+      			keep_one_space_between_namedef_and_attribute = true,
+      			keep_one_space_between_table_and_braket = true,
+      			label_no_indent = true,
+      			quote_style = "double",
+          }
+        }
+      }
+    }
+  })
+end
+
 M.clangd = function(on_attach, capabilities)
   if not vim.g.loaded_clangd_ext then
-    lspconfig.clangd.setup({
+    require("lspconfig").clangd.setup({
       cmd = {
         "clangd",
         "--background-index",
@@ -78,7 +181,7 @@ M.clangd = function(on_attach, capabilities)
 end
 
 M.eslint = function(on_attach, capabilities)
-  lspconfig.eslint.setup({
+  require("lspconfig").eslint.setup({
     on_attach = function(client, bufnr)
       client.server_capabilities.definitionProvider = false
       client.server_capabilities.completionProvider = false
@@ -92,7 +195,7 @@ M.eslint = function(on_attach, capabilities)
         client.server_capabilities.documentFormattingProvider = false
         client.server_capabilities.documentRangeFormattingProvider = false
       else
-        require("custom.plugins.lsp").register({
+        require("config.lsp").register({
           require("null-ls").builtins.formatting.prettierd,
         })
       end
@@ -151,12 +254,13 @@ M.tsserver = function(on_attach, capabilities)
 end
 
 M.volar = function(on_attach, capabilities)
-  lspconfig.volar.setup({
+  require("lspconfig").volar.setup({
     filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
     on_attach = function(client, bufnr)
       client.server_capabilities.documentFormattingProvider = false
       client.server_capabilities.documentRangeFormattingProvider = false
-      -- require("custom.plugins.lsp.utils").on_attach(client, bufnr)
+      on_attach(client, bufnr)
+      -- require("config.lsp.utils").on_attach(client, bufnr)
       -- vim.keymap.set("n", "<leader>fm", function()
       --   vim.cmd("EslintFixAll")
       -- end, { buffer = 0, silent = true })
@@ -166,10 +270,10 @@ M.volar = function(on_attach, capabilities)
 end
 
 M.pyright = function(on_attach, capabilities)
-  lspconfig.pyright.setup({
+  require("lspconfig").pyright.setup({
     on_attach = function(client, bufnr)
       on_attach(client, bufnr)
-      require("custom.plugins.lsp").register({
+      require("config.lsp").register({
         require("null-ls").builtins.formatting.autopep8,
       })
     end,
@@ -185,25 +289,8 @@ M.pyright = function(on_attach, capabilities)
 end
 
 M.pylance = function(on_attach, capabilities)
-  require("custom.plugins.lsp.servers.pylance")
-  lspconfig.pylance.setup({})
-end
-
-M.sumneko_lua = function(on_attach, capabilities)
-  lspconfig.sumneko_lua.setup({
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-      Lua = {
-        telemetry = {
-          enable = false,
-        },
-        workspace = {
-          checkThirdParty = false,
-        },
-      },
-    },
-  })
+  require("config.lsp.servers.pylance")
+  require("lspconfig").pylance.setup({})
 end
 
 M.bashls = function(on_attach, capabilities)
@@ -211,7 +298,7 @@ M.bashls = function(on_attach, capabilities)
     on_attach = function(client, bufnr)
       local null = require("null-ls")
       on_attach(client, bufnr)
-      require("custom.plugins.lsp").register({
+      require("config.lsp").register({
         null.builtins.diagnostics.shellcheck,
         null.builtins.code_actions.shellcheck,
         null.builtins.formatting.shellharden,
